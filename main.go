@@ -70,7 +70,8 @@ func main() {
 	bot.SetAlias("/8h", Sleep8h)
 	bot.SetAlias("/top", TopButton)
 	bot.HandleDefault(defaultHandler)
-	go gameLoop()
+	go mainLoop()
+	go sleepLoop()
 	bot.ListenAndServe()
 }
 
@@ -228,7 +229,7 @@ func sleepHandler(m *tbot.Message) {
 func sleep5mHandler(m *tbot.Message) {
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Sleep = true
-		pet.AwaikTime = time.Now().Add(5 * time.Minute)
+		pet.AwakeTime = time.Now().Add(5 * time.Minute)
 	})
 	m.Reply("Zzz...")
 }
@@ -236,7 +237,7 @@ func sleep5mHandler(m *tbot.Message) {
 func sleep1hHandler(m *tbot.Message) {
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Sleep = true
-		pet.AwaikTime = time.Now().Add(1 * time.Hour)
+		pet.AwakeTime = time.Now().Add(1 * time.Hour)
 	})
 	m.Reply("Zzz...")
 }
@@ -244,7 +245,7 @@ func sleep1hHandler(m *tbot.Message) {
 func sleep8hHandler(m *tbot.Message) {
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Sleep = true
-		pet.AwaikTime = time.Now().Add(8 * time.Hour)
+		pet.AwakeTime = time.Now().Add(8 * time.Hour)
 	})
 	m.Reply("Zzz...")
 }

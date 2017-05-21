@@ -59,6 +59,7 @@ func (ps *PetStorage) Update(id int64, f func(*Pet)) {
 			return err
 		}
 		f(pet)
+		pet.SetMood()
 		petBytes, err = json.Marshal(pet)
 		if err != nil {
 			return err

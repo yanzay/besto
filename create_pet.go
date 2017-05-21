@@ -19,12 +19,13 @@ func CreatePet(f tbot.HandlerFunction) tbot.HandlerFunction {
 			m.Reply(content, tbot.WithMarkdown)
 			m.ReplyKeyboard("Your pet is dead. Create new one?", buttons)
 			return
-		} else {
-			if pet.Name != "" && pet.Emoji != "" {
-				f(m)
-				return
-			}
 		}
+
+		if pet.Name != "" && pet.Emoji != "" {
+			f(m)
+			return
+		}
+
 		defer petStore.Set(m.ChatID, pet)
 		if pet.AskType {
 			switch m.Text() {

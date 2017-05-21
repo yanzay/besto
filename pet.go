@@ -19,7 +19,7 @@ type Pet struct {
 	Food      int
 	Born      time.Time
 	Died      time.Time
-	AwaikTime time.Time
+	AwakeTime time.Time
 	Weight    int
 	Mood      string
 	Alive     bool
@@ -37,6 +37,25 @@ func NewPet(id int64) *Pet {
 		Mood:     "Good",
 		Weight:   1,
 		Alive:    true,
+	}
+}
+
+func (p *Pet) SetMood() {
+	switch {
+	case !p.Alive:
+		p.Mood = "Dead"
+	case p.Health < 50:
+		p.Mood = "Sick"
+	case p.Food < 20:
+		p.Mood = "Hungry"
+	case p.Happy < 5:
+		p.Mood = "Stress"
+	case p.Happy < 50:
+		p.Mood = "Sorrow"
+	case p.Happy >= 100:
+		p.Mood = "Great"
+	default:
+		p.Mood = "Good"
 	}
 }
 
