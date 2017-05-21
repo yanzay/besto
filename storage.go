@@ -11,6 +11,7 @@ type Storage struct {
 	db           *bolt.DB
 	petStore     *PetStorage
 	sessionStore *SessionStorage
+	historyStore *PetStorage
 }
 
 func NewStorage(file string) *Storage {
@@ -27,7 +28,7 @@ func (s *Storage) Close() {
 
 func (s *Storage) PetStorage() *PetStorage {
 	if s.petStore == nil {
-		s.petStore = NewPetStorage(s.db)
+		s.petStore = NewPetStorage(s.db, "pets")
 	}
 	return s.petStore
 }
@@ -37,4 +38,11 @@ func (s *Storage) SessionStorage() *SessionStorage {
 		s.sessionStore = NewSessionStorage(s.db)
 	}
 	return s.sessionStore
+}
+
+func (s *Storage) HistoryStorage() *PetStorage {
+	if s.historyStore == nil {
+		s.historyStore = NewPetStorage(s.db, "hitory")
+	}
+	return s.historyStore
 }

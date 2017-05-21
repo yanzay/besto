@@ -29,7 +29,7 @@ Heal me...
 `))
 
 var topTemplate = template.Must(template.New("top").Parse(
-	`🏆 Top Survivors
+	`🏆 Top
 
 {{ range . }}{{ .TopString }}
 {{ end }}

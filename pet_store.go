@@ -13,10 +13,10 @@ type PetStorage struct {
 	bucket []byte
 }
 
-func NewPetStorage(db *bolt.DB) *PetStorage {
+func NewPetStorage(db *bolt.DB, bucket string) *PetStorage {
 	petStorage := &PetStorage{
 		db:     db,
-		bucket: []byte("pets"),
+		bucket: []byte(bucket),
 	}
 	db.Update(func(tx *bolt.Tx) error {
 		tx.CreateBucketIfNotExists(petStorage.bucket)
@@ -83,7 +83,7 @@ func (ps *PetStorage) Set(id int64, pet *Pet) {
 	})
 }
 
-func (ps *PetStorage) Alive() []*Pet {
+func (ps *PetStorage) All() []*Pet {
 	pets := make([]*Pet, 0)
 	petsBytes := make([][]byte, 0)
 	ps.db.View(func(tx *bolt.Tx) error {
@@ -102,10 +102,36 @@ func (ps *PetStorage) Alive() []*Pet {
 		err := json.Unmarshal(petBytes, pet)
 		if err != nil {
 			log.Errorf("Can't unmarhsal pet: %q", err)
+			continue
 		}
-		if pet.Alive {
-			pets = append(pets, pet)
-		}
+		pets = append(pets, pet)
 	}
 	return pets
+}
+
+func (ps *PetStorage) Alive() []*Pet {
+	alive := make([]*Pet, 0)
+	pets := ps.All()
+	for _, pet := range pets {
+		if pet.Alive {
+			alive = append(alive, pet)
+		}
+	}
+	return alive
+}
+
+func (ps *PetStorage) Create(pet *Pet) {
+	petBytes, err := json.Marshal(pet)
+	if err != nil {
+		log.Errorf("Can't marshal pet: %q", err)
+		return
+	}
+	ps.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(ps.bucket)
+		id, err := b.NextSequence()
+		if err != nil {
+			return err
+		}
+		return b.Put([]byte(fmt.Sprint(id)), petBytes)
+	})
 }

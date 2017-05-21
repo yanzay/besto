@@ -69,6 +69,13 @@ func (p *Pet) Age() time.Duration {
 	return roundDuration(d)
 }
 
+func (p *Pet) Die() {
+	p.Health = 0
+	p.Alive = false
+	p.Died = time.Now()
+	go historyStore.Create(p)
+}
+
 func roundDuration(d time.Duration) time.Duration {
 	return d - (d % time.Second)
 }
@@ -99,7 +106,11 @@ func (p *Pet) WeightString() string {
 
 func (p *Pet) TopString() string {
 	name := fmt.Sprintf("%s%s", p.Emoji, p.Name)
-	return pad(name, p.Age().String())
+	deadStr := ""
+	if !p.Alive {
+		deadStr = "💀"
+	}
+	return pad(name, p.Age().String()) + deadStr
 }
 
 func pad(first, last string) string {

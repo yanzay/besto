@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	storage  *Storage
-	petStore *PetStorage
+	storage      *Storage
+	petStore     *PetStorage
+	historyStore *PetStorage
 )
 
 var local = flag.Bool("local", false, "Launch bot without webhook")
@@ -24,6 +25,7 @@ func main() {
 	flag.Parse()
 	storage := NewStorage(*dataFile)
 	petStore = storage.PetStorage()
+	historyStore = storage.HistoryStorage()
 	defer storage.Close()
 	routerMux := tbot.NewRouterMux(storage.SessionStorage())
 	var bot *tbot.Server
@@ -55,6 +57,8 @@ func main() {
 	bot.HandleFunc("/sleep/1h", sleep1hHandler)
 	bot.HandleFunc("/sleep/8h", sleep8hHandler)
 	bot.HandleFunc("/top", topHandler)
+	bot.HandleFunc("/top/alive", topAliveHandler)
+	bot.HandleFunc("/top/all", topAllHandler)
 	bot.SetAlias(tbot.RouteRoot, HomeButton, InfoButton)
 	bot.SetAlias("/feed", FeedButton)
 	bot.SetAlias("/play", PlayButton)
@@ -69,6 +73,8 @@ func main() {
 	bot.SetAlias("/1h", Sleep1h)
 	bot.SetAlias("/8h", Sleep8h)
 	bot.SetAlias("/top", TopButton)
+	bot.SetAlias("/all", AllButton)
+	bot.SetAlias("/alive", AliveButton)
 	bot.HandleDefault(defaultHandler)
 	go mainLoop()
 	go sleepLoop()
@@ -105,6 +111,10 @@ var (
 	Sleep5m = "⏰ 5 min"
 	Sleep1h = "⏰ 1 hour"
 	Sleep8h = "⏰ 8 hours"
+
+	// Top
+	AliveButton = "🌱 Alive"
+	AllButton   = "🌀 All"
 )
 
 func defaultHandler(m *tbot.Message) {
@@ -251,7 +261,30 @@ func sleep8hHandler(m *tbot.Message) {
 }
 
 func topHandler(m *tbot.Message) {
+	buttons := [][]string{
+		{AliveButton, AllButton},
+		{HomeButton},
+	}
+	m.ReplyKeyboard("Choose top", buttons)
+}
+
+func topAliveHandler(m *tbot.Message) {
 	pets := petStore.Alive()
+	sort.Slice(pets, func(i, j int) bool {
+		return pets[i].Age() > pets[j].Age()
+	})
+	b := &bytes.Buffer{}
+	err := topTemplate.Execute(b, pets)
+	if err != nil {
+		log.Errorf("Can't render topTemplate: %q", err)
+	}
+	content := "```\n" + b.String() + "```"
+	m.Reply(content, tbot.WithMarkdown)
+}
+
+func topAllHandler(m *tbot.Message) {
+	pets := petStore.Alive()
+	pets = append(pets, historyStore.All()...)
 	sort.Slice(pets, func(i, j int) bool {
 		return pets[i].Age() > pets[j].Age()
 	})

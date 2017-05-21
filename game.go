@@ -9,7 +9,7 @@ func mainLoop() {
 	tick := time.Tick(moveDuration)
 	for range tick {
 		for _, pet := range petStore.Alive() {
-			if pet.Alive && !pet.Sleep {
+			if !pet.Sleep {
 				petStore.Update(pet.PlayerID, func(pet *Pet) {
 					decreaseFood(pet)
 					decreaseHappy(pet)
@@ -66,9 +66,7 @@ func decreaseHealth(pet *Pet) {
 		if pet.Health > SpeedHealth {
 			pet.Health -= SpeedHealth
 		} else {
-			pet.Health = 0
-			pet.Alive = false
-			pet.Died = time.Now()
+			pet.Die()
 		}
 	}
 }
