@@ -4,6 +4,7 @@ import "fmt"
 
 type PetType struct {
 	Emoji string
+	Adult string
 	Name  string
 }
 

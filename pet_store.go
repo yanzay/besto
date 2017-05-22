@@ -104,7 +104,9 @@ func (ps *PetStorage) All() []*Pet {
 			log.Errorf("Can't unmarhsal pet: %q", err)
 			continue
 		}
-		pets = append(pets, pet)
+		if pet.Name != "" && pet.Emoji != "" {
+			pets = append(pets, pet)
+		}
 	}
 	return pets
 }
