@@ -149,18 +149,28 @@ func feedHandler(m *tbot.Message) {
 }
 
 func fullMealHandler(m *tbot.Message) {
+	message := "Om-nom-nom..."
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Food += 10
+		if pet.Food > 200 {
+			pet.Food = 200
+			message = "I can't eat more!"
+		}
 	})
-	m.Reply("Om-nom-nom...")
+	m.Reply(message)
 	feedHandler(m)
 }
 
 func smallMealHandler(m *tbot.Message) {
+	message := "Om-nom..."
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Food += 5
+		if pet.Food > 200 {
+			pet.Food = 200
+			message = "I can't eat more!"
+		}
 	})
-	m.Reply("Om-nom...")
+	m.Reply(message)
 	feedHandler(m)
 }
 
@@ -180,6 +190,9 @@ func playHandler(m *tbot.Message) {
 
 func playGameHandler(m *tbot.Message) {
 	petStore.Update(m.ChatID, func(pet *Pet) {
+		if pet.Happy < 120 {
+			pet.XP += 100
+		}
 		pet.Happy += 10
 		if pet.Happy > 120 {
 			pet.Happy = 120

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -9,6 +10,7 @@ import (
 )
 
 const padWidth = 18
+const FirstLevelXP = 1000
 
 type Pet struct {
 	PlayerID  int64
@@ -26,6 +28,7 @@ type Pet struct {
 	Sleep     bool
 	AskName   bool
 	AskType   bool
+	XP        int64
 }
 
 func NewPet(id int64) *Pet {
@@ -74,6 +77,29 @@ func (p *Pet) Die() {
 	p.Alive = false
 	p.Died = time.Now()
 	go historyStore.Create(p)
+}
+
+func (p *Pet) XPForLevel(level int) int64 {
+	return int64(FirstLevelXP * math.Pow(2.1, float64(level-1)))
+}
+
+func (p *Pet) Level() int {
+	if p.XP < FirstLevelXP {
+		return 0
+	}
+	return int(math.Log(float64(p.XP)/FirstLevelXP)/math.Log(2.1)) + 1
+}
+
+func (p *Pet) XPForNextLevel() int64 {
+	return int64(float64(p.XPForLevel(p.Level())) * 1.1)
+}
+
+func (p *Pet) XPFromCurrentLevel() int64 {
+	return p.XP - p.XPForLevel(p.Level())
+}
+
+func (p *Pet) XPString() string {
+	return fmt.Sprintf("%d/%d", p.XPFromCurrentLevel(), p.XPForNextLevel())
 }
 
 func roundDuration(d time.Duration) time.Duration {
