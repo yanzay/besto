@@ -5,6 +5,9 @@ import "text/template"
 var rootTemplate = template.Must(template.New("root").Parse(
 	`{{ if .Alive }}{{ .Emoji }}{{ else }}☠️{{ end }} {{ .Name }}
 
+Level {{ .Level }}
+XP {{ .XPString }}
+
 {{ .AgeString }}🕑
 {{ .WeightString }}⚖️
 {{ .MoodString }}💭

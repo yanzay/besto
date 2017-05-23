@@ -2,8 +2,19 @@ package main
 
 import "time"
 
-var moveDuration = 60 * time.Second
-var sleepCheckDuration = 5 * time.Second
+const (
+	SpeedFood         = 2
+	SpeedHappy        = 1
+	SpeedHealth       = 2
+	SpeedNormalWeight = 1
+	SpeedOverWeight   = 2
+	NormalWeight      = 42
+)
+
+var (
+	moveDuration       = 60 * time.Second
+	sleepCheckDuration = 5 * time.Second
+)
 
 func mainLoop() {
 	tick := time.Tick(moveDuration)
@@ -15,6 +26,9 @@ func mainLoop() {
 					decreaseHappy(pet)
 					decreaseHealth(pet)
 					pet.Weight += getWeightDelta(pet)
+					if pet.Weight < 2 {
+						pet.Weight = 1
+					}
 				})
 			}
 		}
@@ -28,20 +42,12 @@ func sleepLoop() {
 			if pet.Sleep && pet.AwakeTime.Before(time.Now()) {
 				petStore.Update(pet.PlayerID, func(p *Pet) {
 					p.Sleep = false
+					p.Notify("Good morning!")
 				})
 			}
 		}
 	}
 }
-
-const (
-	SpeedFood         = 2
-	SpeedHappy        = 1
-	SpeedHealth       = 2
-	SpeedNormalWeight = 1
-	SpeedOverWeight   = 2
-	NormalWeight      = 42
-)
 
 func decreaseFood(pet *Pet) {
 	if pet.Food >= SpeedFood {

@@ -41,6 +41,12 @@ func CreatePet(f tbot.HandlerFunction) tbot.HandlerFunction {
 				pet.Emoji = Fox.Emoji
 			case Panda.String():
 				pet.Emoji = Panda.Emoji
+			case Pig.String():
+				pet.Emoji = Pig.Emoji
+			case Rabbit.String():
+				pet.Emoji = Rabbit.Emoji
+			case Mouse.String():
+				pet.Emoji = Mouse.Emoji
 			default:
 				m.Replyf("Wrong pet type %s", m.Text())
 			}
@@ -59,6 +65,7 @@ func CreatePet(f tbot.HandlerFunction) tbot.HandlerFunction {
 			pets := [][]string{
 				{Chicken.String(), Penguin.String(), Dog.String()},
 				{Monkey.String(), Fox.String(), Panda.String()},
+				{Pig.String(), Rabbit.String(), Mouse.String()},
 			}
 			m.ReplyKeyboard("Choose your pet:", pets, tbot.OneTimeKeyboard)
 			return

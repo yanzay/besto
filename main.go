@@ -16,6 +16,7 @@ var (
 	storage      *Storage
 	petStore     *PetStorage
 	historyStore *PetStorage
+	bot          *tbot.Server
 )
 
 var local = flag.Bool("local", false, "Launch bot without webhook")
@@ -28,7 +29,6 @@ func main() {
 	historyStore = storage.HistoryStorage()
 	defer storage.Close()
 	routerMux := tbot.NewRouterMux(storage.SessionStorage())
-	var bot *tbot.Server
 	var err error
 	token := os.Getenv("TELEGRAM_TOKEN")
 	if *local {
@@ -149,18 +149,32 @@ func feedHandler(m *tbot.Message) {
 }
 
 func fullMealHandler(m *tbot.Message) {
+	message := "Om-nom-nom..."
 	petStore.Update(m.ChatID, func(pet *Pet) {
+		if pet.Food == 200 {
+			message = "I can't eat more."
+		}
 		pet.Food += 10
+		if pet.Food > 200 {
+			pet.Food = 200
+		}
 	})
-	m.Reply("Om-nom-nom...")
+	m.Reply(message)
 	feedHandler(m)
 }
 
 func smallMealHandler(m *tbot.Message) {
+	message := "Om-nom..."
 	petStore.Update(m.ChatID, func(pet *Pet) {
+		if pet.Food == 200 {
+			message = "I can't eat more."
+		}
 		pet.Food += 5
+		if pet.Food > 200 {
+			pet.Food = 200
+		}
 	})
-	m.Reply("Om-nom...")
+	m.Reply(message)
 	feedHandler(m)
 }
 
@@ -180,6 +194,9 @@ func playHandler(m *tbot.Message) {
 
 func playGameHandler(m *tbot.Message) {
 	petStore.Update(m.ChatID, func(pet *Pet) {
+		if pet.Happy < 120 {
+			pet.XP += 100
+		}
 		pet.Happy += 10
 		if pet.Happy > 120 {
 			pet.Happy = 120
@@ -274,6 +291,9 @@ func topAliveHandler(m *tbot.Message) {
 		return pets[i].Age() > pets[j].Age()
 	})
 	b := &bytes.Buffer{}
+	if len(pets) > 10 {
+		pets = pets[:10]
+	}
 	err := topTemplate.Execute(b, pets)
 	if err != nil {
 		log.Errorf("Can't render topTemplate: %q", err)
@@ -289,6 +309,9 @@ func topAllHandler(m *tbot.Message) {
 		return pets[i].Age() > pets[j].Age()
 	})
 	b := &bytes.Buffer{}
+	if len(pets) > 10 {
+		pets = pets[:10]
+	}
 	err := topTemplate.Execute(b, pets)
 	if err != nil {
 		log.Errorf("Can't render topTemplate: %q", err)

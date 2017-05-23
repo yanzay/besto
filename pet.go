@@ -9,6 +9,7 @@ import (
 )
 
 const padWidth = 18
+const XPFirstLevel = 1000
 
 type Pet struct {
 	PlayerID  int64
@@ -26,6 +27,7 @@ type Pet struct {
 	Sleep     bool
 	AskName   bool
 	AskType   bool
+	XP        int64
 }
 
 func NewPet(id int64) *Pet {
@@ -73,7 +75,40 @@ func (p *Pet) Die() {
 	p.Health = 0
 	p.Alive = false
 	p.Died = time.Now()
+	p.Notify(fmt.Sprintf("Oh no! your pet %s%s died.", p.Emoji, p.Name))
 	go historyStore.Create(p)
+}
+
+func (p *Pet) Notify(text string) {
+	bot.Send(p.PlayerID, "💬 "+text)
+}
+
+func (p *Pet) Level() int {
+	xp := p.XP
+	level := 0
+	levelXP := XPFirstLevel
+	for {
+		xp -= int64(levelXP)
+		if xp < 0 {
+			break
+		}
+		levelXP = int(float32(levelXP) * 1.1)
+		level++
+	}
+	return level
+}
+
+func (p *Pet) XPString() string {
+	xp := p.XP
+	levelXP := XPFirstLevel
+	for {
+		xp -= int64(levelXP)
+		if xp < 0 {
+			break
+		}
+		levelXP = int(float32(levelXP) * 1.1)
+	}
+	return fmt.Sprintf("%d/%d", xp+int64(levelXP), levelXP)
 }
 
 func roundDuration(d time.Duration) time.Duration {
