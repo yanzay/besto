@@ -288,7 +288,7 @@ func topHandler(m *tbot.Message) {
 func topAliveHandler(m *tbot.Message) {
 	pets := petStore.Alive()
 	sort.Slice(pets, func(i, j int) bool {
-		return pets[i].Age() > pets[j].Age()
+		return pets[i].XP > pets[j].XP
 	})
 	b := &bytes.Buffer{}
 	if len(pets) > 10 {
@@ -306,7 +306,7 @@ func topAllHandler(m *tbot.Message) {
 	pets := petStore.Alive()
 	pets = append(pets, historyStore.All()...)
 	sort.Slice(pets, func(i, j int) bool {
-		return pets[i].Age() > pets[j].Age()
+		return pets[i].XP > pets[j].XP
 	})
 	b := &bytes.Buffer{}
 	if len(pets) > 10 {

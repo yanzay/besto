@@ -146,7 +146,7 @@ func (p *Pet) TopString() string {
 	if !p.Alive {
 		deadStr = "💀"
 	}
-	return pad(name, p.Age().String()) + deadStr
+	return pad(name, fmt.Sprintf("%d lvl", p.Level())) + deadStr
 }
 
 func pad(first, last string) string {
