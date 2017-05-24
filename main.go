@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"math/rand"
 	"os"
 	"sort"
 	"text/template"
@@ -193,7 +194,24 @@ func playHandler(m *tbot.Message) {
 }
 
 func playGameHandler(m *tbot.Message) {
+	pet := petStore.Get(m.ChatID)
+	if pet.Play {
+		m.Reply("You pet is already playing. Keep calm.")
+		return
+	}
+	pets := petStore.Alive()
+	randomPet := pets[rand.Intn(len(pets))]
+	if randomPet.PlayerID != m.ChatID {
+		m.Replyf("Your pet started to play %s with %s", m.Data, randomPet.String())
+	} else {
+		m.Replyf("Your pet plays %s with himself.", m.Data)
+	}
 	petStore.Update(m.ChatID, func(pet *Pet) {
+		pet.Play = true
+	})
+	time.Sleep(5 * time.Second)
+	petStore.Update(m.ChatID, func(pet *Pet) {
+		pet.Play = false
 		if pet.Happy < 120 {
 			pet.XP += 100
 		}
@@ -202,8 +220,7 @@ func playGameHandler(m *tbot.Message) {
 			pet.Happy = 120
 		}
 	})
-	m.Reply("Weeeee! It's fun!")
-	playHandler(m)
+	m.Reply("Weeeee! It was fun!")
 }
 
 func healHandler(m *tbot.Message) {

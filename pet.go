@@ -28,6 +28,7 @@ type Pet struct {
 	AskName   bool
 	AskType   bool
 	XP        int64
+	Play      bool
 }
 
 func NewPet(id int64) *Pet {
@@ -40,6 +41,10 @@ func NewPet(id int64) *Pet {
 		Weight:   1,
 		Alive:    true,
 	}
+}
+
+func (p *Pet) String() string {
+	return p.Emoji + p.Name
 }
 
 func (p *Pet) SetMood() {
@@ -75,8 +80,8 @@ func (p *Pet) Die() {
 	p.Health = 0
 	p.Alive = false
 	p.Died = time.Now()
-	p.Notify(fmt.Sprintf("Oh no! your pet %s%s died.", p.Emoji, p.Name))
-	bot.Reset(p.PlayerID)
+	p.Notify(fmt.Sprintf("Oh no! your pet %s died.", p.String()))
+	go bot.Reset(p.PlayerID)
 	go historyStore.Create(p)
 }
 
