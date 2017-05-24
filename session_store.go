@@ -39,3 +39,10 @@ func (ss *SessionStorage) Set(id int64, route string) {
 		return b.Put([]byte(fmt.Sprint(id)), []byte(route))
 	})
 }
+
+func (ss *SessionStorage) Reset(id int64) {
+	ss.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(ss.bucket)
+		return b.Put([]byte(fmt.Sprint(id)), []byte{})
+	})
+}
