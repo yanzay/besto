@@ -1,0 +1,12 @@
+pipeline:
+  build:
+    image: golang
+    commands:
+      - go get
+      - go build
+      - go test
+
+  publish:
+    image: plugins/docker
+    repo: yanzay/besto
+    tags: [ latest ]
