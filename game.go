@@ -53,7 +53,7 @@ func decreaseFood(pet *Pet) {
 	if pet.Food > SpeedFood {
 		pet.Food -= SpeedFood
 	} else {
-		if pet.Food >= 0 {
+		if pet.Food > 0 {
 			pet.Notify("Hey! I am hungry!")
 		}
 		pet.Food = 0
@@ -77,6 +77,9 @@ func decreaseHappy(pet *Pet) {
 
 func decreaseHealth(pet *Pet) {
 	if pet.Happy == 0 || pet.Food == 0 {
+		if pet.Health < 10 {
+			pet.Notify("I'm dying! Please help me!")
+		}
 		if pet.Health > SpeedHealth {
 			pet.Health -= SpeedHealth
 		} else {
