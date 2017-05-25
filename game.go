@@ -50,19 +50,27 @@ func sleepLoop() {
 }
 
 func decreaseFood(pet *Pet) {
-	if pet.Food >= SpeedFood {
+	if pet.Food > SpeedFood {
 		pet.Food -= SpeedFood
 	} else {
+		if pet.Food >= 0 {
+			pet.Notify("Hey! I am hungry!")
+		}
 		pet.Food = 0
 	}
 }
 
 func decreaseHappy(pet *Pet) {
-	pet.Happy -= SpeedHappy
+	speed := SpeedHappy
 	if pet.Food == 0 {
-		pet.Happy -= SpeedHappy
+		speed *= 2
 	}
-	if pet.Happy < 0 {
+	if pet.Happy > speed {
+		pet.Happy -= speed
+	} else {
+		if pet.Happy > 0 {
+			pet.Notify("Hey! I am bored!")
+		}
 		pet.Happy = 0
 	}
 }

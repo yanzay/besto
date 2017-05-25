@@ -27,6 +27,8 @@ func main() {
 	flag.Parse()
 	storage := NewStorage(*dataFile)
 	petStore = storage.PetStorage()
+	resetPlays()
+	go gameStats()
 	historyStore = storage.HistoryStorage()
 	defer storage.Close()
 	routerMux := tbot.NewRouterMux(storage.SessionStorage())
@@ -117,6 +119,15 @@ var (
 	AliveButton = "🌱 Alive"
 	AllButton   = "🌀 All"
 )
+
+func resetPlays() {
+	pets := petStore.Alive()
+	for _, pet := range pets {
+		petStore.Update(pet.PlayerID, func(p *Pet) {
+			p.Play = false
+		})
+	}
+}
 
 func defaultHandler(m *tbot.Message) {
 	m.Reply("hm?")
@@ -345,4 +356,13 @@ func contentFromTemplate(tpl *template.Template, pet *Pet) (string, error) {
 		return "", err
 	}
 	return "```\n" + b.String() + "```", nil
+}
+
+func gameStats() {
+	for {
+		pets := petStore.All()
+		alive := petStore.Alive()
+		log.Infof("Players: %d, alive: %d", len(pets), len(alive))
+		time.Sleep(60 * time.Second)
+	}
 }

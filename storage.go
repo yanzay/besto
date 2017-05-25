@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -19,6 +21,7 @@ func NewStorage(file string) *Storage {
 	if err != nil {
 		log.Fatalf("Can't open database: %q", err)
 	}
+	go stats(db)
 	return &Storage{db: db}
 }
 
@@ -45,4 +48,24 @@ func (s *Storage) HistoryStorage() *PetStorage {
 		s.historyStore = NewPetStorage(s.db, "hitory")
 	}
 	return s.historyStore
+}
+
+func stats(db *bolt.DB) {
+	// Grab the initial stats.
+	prev := db.Stats()
+
+	for {
+		// Wait for 10s.
+		time.Sleep(60 * time.Second)
+
+		// Grab the current stats and diff them.
+		stats := db.Stats()
+		diff := stats.Sub(&prev)
+
+		// Encode stats to JSON and print to STDERR.
+		json.NewEncoder(os.Stdout).Encode(diff)
+
+		// Save stats for the next loop.
+		prev = stats
+	}
 }
