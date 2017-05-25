@@ -1,3 +1,7 @@
+workspace:
+  base: /go
+  path: src/github.com/yanzay/besto
+
 pipeline:
   build:
     image: golang
