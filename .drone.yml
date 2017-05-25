@@ -12,4 +12,6 @@ pipeline:
   publish:
     image: plugins/docker
     repo: yanzay/besto
+    username: yanzay
+    password: ${DOCKER_PASSWORD}
     tags: [ latest ]
