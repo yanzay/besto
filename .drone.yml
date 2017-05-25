@@ -16,3 +16,10 @@ pipeline:
     tags: [ latest ]
     secrets: [ DOCKER_PASSWORD ]
 
+  telegram:
+    image: appleboy/drone-telegram
+    token: ${TELEGRAM_DRONE_TOKEN}
+    to: 93068777
+    when:
+      status: [ success, failure ]
+
