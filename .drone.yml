@@ -22,10 +22,12 @@ pipeline:
     username: root
     port: 22
     script:
-      - echo hello
+      - cd infra
+      - docker-compose pull besto
+      - docker-compose up -d
     when:
       status: success
-    secrets: [ SSH_KEY, SSH_USERNAME ]
+    secrets: [ SSH_KEY ]
 
   telegram:
     image: appleboy/drone-telegram
