@@ -22,9 +22,7 @@ pipeline:
     username: root
     port: 22
     script:
-      - cd infra
-      - docker-compose pull besto
-      - docker-compose up -d
+      - echo hello
     when:
       status: success
     secrets: [ SSH_KEY ]
