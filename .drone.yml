@@ -37,4 +37,6 @@ pipeline:
     to: 93068777
     when:
       status: [ success, failure ]
-    secrets: [ PLUGIN_TOKEN ]
+    secrets:
+      - source: NOTIFICATION_TOKEN
+        target: PLUGIN_TOKEN
