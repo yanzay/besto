@@ -28,9 +28,9 @@ pipeline:
       status: success
     secrets:
       - source: DEPLOY_KEY
-        target: PLUGIN_KEY
+        target: plugin_key
       - source: DEPLOY_USER
-        target: PLUGIN_USERNAME
+        target: plugin_username
 
   telegram:
     image: appleboy/drone-telegram
