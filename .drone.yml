@@ -19,6 +19,7 @@ pipeline:
   deploy:
     image: appleboy/drone-ssh
     host: 67.207.72.170
+    username: root
     port: 22
     script:
       - cd infra
