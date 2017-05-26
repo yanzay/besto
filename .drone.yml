@@ -16,6 +16,21 @@ pipeline:
     tags: [ latest ]
     secrets: [ DOCKER_PASSWORD ]
 
+  deploy:
+    image: appleboy/drone-ssh
+    host: besto.yanzay.com
+    username: root
+    port: 22
+    script:
+      - cd infra
+      - docker-compose pull besto
+      - docker-compose up -d
+    when:
+      status: success
+    secrets:
+      - source: DEPLOY_KEY
+        target: PLUGIN_KEY
+
   telegram:
     image: appleboy/drone-telegram
     to: 93068777
