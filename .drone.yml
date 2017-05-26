@@ -18,7 +18,7 @@ pipeline:
 
   deploy:
     image: appleboy/drone-ssh
-    host: besto.yanzay.com
+    host: 67.207.72.170
     port: 22
     script:
       - cd infra
