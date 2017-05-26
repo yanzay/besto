@@ -25,7 +25,7 @@ pipeline:
       - echo hello
     when:
       status: success
-    secrets: [ SSH_KEY ]
+    secrets: [ SSH_KEY, SSH_USERNAME ]
 
   telegram:
     image: appleboy/drone-telegram
