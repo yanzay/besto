@@ -26,11 +26,7 @@ pipeline:
       - docker-compose up -d
     when:
       status: success
-    secrets:
-      - source: DEPLOY_KEY
-        target: plugin_key
-      - source: DEPLOY_USER
-        target: plugin_username
+    secrets: [deploy_username, deploy_key]
 
   telegram:
     image: appleboy/drone-telegram
