@@ -29,6 +29,8 @@ pipeline:
     secrets:
       - source: DEPLOY_KEY
         target: PLUGIN_KEY
+      - source: DEPLOY_USER
+        target: PLUGIN_USERNAME
 
   telegram:
     image: appleboy/drone-telegram
