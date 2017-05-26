@@ -20,6 +20,7 @@ pipeline:
     image: appleboy/drone-ssh
     host: besto.yanzay.com
     username: root
+    key: ${PLUGIN_KEY}
     port: 22
     script:
       - cd infra
