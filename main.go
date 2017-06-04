@@ -62,6 +62,7 @@ func main() {
 	bot.HandleFunc("/top", topHandler)
 	bot.HandleFunc("/top/alive", topAliveHandler)
 	bot.HandleFunc("/top/all", topAllHandler)
+	bot.HandleFunc("/reset", resetHandler)
 	bot.SetAlias(tbot.RouteRoot, HomeButton, InfoButton)
 	bot.SetAlias("feed", FeedButton)
 	bot.SetAlias("play", PlayButton)
@@ -127,6 +128,11 @@ func resetPlays() {
 			p.Play = false
 		})
 	}
+}
+
+func resetHandler(m *tbot.Message) {
+	bot.Reset(m.ChatID)
+	rootHandler(m)
 }
 
 func defaultHandler(m *tbot.Message) {
