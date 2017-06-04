@@ -254,6 +254,11 @@ func healHandler(m *tbot.Message) {
 }
 
 func pillHandler(m *tbot.Message) {
+	pet := petStore.Get(m.ChatID)
+	if pet.Health == 100 {
+		m.Reply("I'm not sick!")
+		return
+	}
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Health += 40
 		pet.Happy -= 10
@@ -269,6 +274,11 @@ func pillHandler(m *tbot.Message) {
 }
 
 func injectionHandler(m *tbot.Message) {
+	pet := petStore.Get(m.ChatID)
+	if pet.Health == 100 {
+		m.Reply("I'm not sick!")
+		return
+	}
 	petStore.Update(m.ChatID, func(pet *Pet) {
 		pet.Health = 100
 		if pet.Happy > 10 {
