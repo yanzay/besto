@@ -7,16 +7,16 @@ memo = "bf3f484dadc62770357726240f75f0629b828caf2cdce47f67915706e95aff48"
   revision = "e9cf4fae01b5a8ff89d0ec6b32f0d9c9f79aefdd"
 
 [[projects]]
-  branch = "master"
   name = "github.com/go-telegram-bot-api/telegram-bot-api"
   packages = ["."]
-  revision = "e4602014c78ff0d323bb30f38ae0f90afdb96ad6"
+  revision = "0a57807db79efce7f6719fbb2c0e0f83fda79aec"
+  version = "v4.6"
 
 [[projects]]
-  branch = "master"
   name = "github.com/technoweenie/multipartstreamer"
   packages = ["."]
   revision = "a90a01d73ae432e2611d178c18367fbaa13e0154"
+  version = "v1.0.1"
 
 [[projects]]
   branch = "master"
@@ -28,10 +28,10 @@ memo = "bf3f484dadc62770357726240f75f0629b828caf2cdce47f67915706e95aff48"
   branch = "router-mux"
   name = "github.com/yanzay/tbot"
   packages = [".","internal/adapter"]
-  revision = "c4f3ae5de0bb70524d69facd943836ab09e693a9"
+  revision = "9da7f184e9f2b49899f46c67885c46da35c70017"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "c200b10b5d5e122be351b67af224adc6128af5bf"
+  revision = "b90f89a1e7a9c1f6b918820b3daa7f08488c8594"
