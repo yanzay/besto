@@ -81,6 +81,7 @@ func (p *Pet) Die() {
 	p.Alive = false
 	p.Died = time.Now()
 	p.Notify(fmt.Sprintf("Oh no! your pet %s died.", p.String()))
+
 	go bot.Reset(p.PlayerID)
 	go historyStore.Create(p)
 }
