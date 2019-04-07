@@ -7,7 +7,7 @@ pipeline:
     image: golang
     commands:
       - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build
-      - go test
+      - GO111MODULE=on go test
 
   publish:
     image: plugins/docker
