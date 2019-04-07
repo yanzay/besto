@@ -27,7 +27,7 @@ pipeline:
       - docker-compose up -d
     when:
       status: success
-    secrets: [ SSH_KEY ]
+    secrets: [ ssh_key ]
 
   telegram:
     image: appleboy/drone-telegram
